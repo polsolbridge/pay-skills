@@ -5,6 +5,8 @@ description: Non-custodial cross-chain crypto swap API supporting 1288 assets ac
 use_case: Swap or quote cryptocurrency between any two assets without KYC, wallet connection or account creation; get real-time exchange rates and track swap completion status
 category: defi
 service_url: https://swaptitan.net
+openapi:
+  path: openapi.json
 ---
 
 ## Overview
