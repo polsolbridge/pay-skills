@@ -58,17 +58,25 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "ticker":  { "type": "string", "example": "btc" },
-                      "network": { "type": "string", "example": "btc" },
-                      "name":    { "type": "string", "example": "Bitcoin" },
-                      "image":   { "type": "string", "description": "Logo URL" }
-                    },
-                    "required": ["ticker", "network", "name"]
-                  }
+                  "type": "object",
+                  "properties": {
+                    "count": { "type": "integer", "example": 1290 },
+                    "assets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ticker":   { "type": "string", "example": "btc" },
+                          "network":  { "type": "string", "example": "btc" },
+                          "name":     { "type": "string", "example": "Bitcoin" },
+                          "image":    { "type": "string", "description": "Logo URL" },
+                          "isStable": { "type": "boolean" }
+                        },
+                        "required": ["ticker", "network", "name"]
+                      }
+                    }
+                  },
+                  "required": ["count", "assets"]
                 }
               }
             }
