@@ -237,11 +237,12 @@
                   "type": "object",
                   "properties": {
                     "id":            { "type": "string" },
-                    "status":        { "type": "string", "enum": ["waiting", "confirming", "exchanging", "done", "failed"], "description": "Normalized status across all providers" },
+                    "status":        { "type": "string", "enum": ["waiting", "confirming", "exchanging", "done", "failed", "unknown"], "description": "Normalized status. unknown = provider mismatch or order not found" },
                     "raw":           { "type": "string", "description": "Provider-native status string" },
                     "payoutHash":    { "type": "string", "nullable": true, "description": "Outgoing TX hash (set when status=done)" },
                     "toCurrency":    { "type": "string", "nullable": true },
-                    "amountReceive": { "type": "string", "nullable": true, "description": "Actual received amount (set when status=done)" }
+                    "amountReceive": { "type": "string", "nullable": true, "description": "Actual received amount (set when status=done)" },
+                    "error":         { "type": "string", "description": "Error message when status=unknown" }
                   },
                   "required": ["id", "status"]
                 }
