@@ -132,7 +132,7 @@
                     "to":              { "type": "string", "example": "sol" },
                     "provider":        { "type": "string", "enum": ["changenow", "simpleswap"], "description": "Routing provider selected" }
                   },
-                  "required": ["estimatedAmount", "from", "to"]
+                  "required": ["estimatedAmount", "minAmount", "from", "to", "provider"]
                 }
               }
             }
