@@ -199,7 +199,7 @@
                     "to":            { "type": "string" },
                     "validUntil":    { "type": "string", "description": "ISO timestamp — deposit window closes after this" }
                   },
-                  "required": ["id", "payinAddress", "from", "to", "provider"]
+                  "required": ["id", "payinAddress", "amount", "from", "to", "provider", "validUntil"]
                 }
               }
             }
