@@ -193,7 +193,7 @@
                   "properties": {
                     "orderId":         { "type": "string", "description": "Order ID — pass as `id` to /v1/swap/status" },
                     "payinAddress":    { "type": "string", "description": "Send source funds to this address" },
-                    "estimatedAmount": { "type": "number", "description": "Estimated output amount in destination asset" },
+                    "estimatedAmount": { "type": "string", "description": "Estimated output amount in destination asset" },
                     "provider":        { "type": "string", "enum": ["changenow", "simpleswap"] },
                     "trackUrl":        { "type": "string", "description": "Provider tracking URL for manual status lookup" }
                   },
@@ -211,7 +211,7 @@
       "get": {
         "operationId": "getSwapStatus",
         "summary": "Get swap order status",
-        "description": "Poll every 20–30 seconds after creating a swap. Status lifecycle: waiting → confirming → exchanging → done. On completion, payoutHash contains the outgoing transaction hash.",
+        "description": "Poll every 20–30 seconds after creating a swap. Status lifecycle: waiting → confirming → exchanging → done (success) or failed (refund to refundAddress) or unknown (provider mismatch, stop polling). Terminal states: done, failed, unknown.",
         "parameters": [
           {
             "name": "id",
@@ -237,7 +237,7 @@
                   "type": "object",
                   "properties": {
                     "id":            { "type": "string" },
-                    "status":        { "type": "string", "enum": ["waiting", "confirming", "exchanging", "done", "failed", "unknown"], "description": "Normalized status. unknown = provider mismatch or order not found" },
+                    "status":        { "type": "string", "enum": ["waiting", "confirming", "exchanging", "done", "failed", "unknown"], "description": "Normalized status. Terminal states: done (success), failed (refund pending), unknown (provider mismatch — stop polling)" },
                     "raw":           { "type": "string", "description": "Provider-native status string" },
                     "payoutHash":    { "type": "string", "nullable": true, "description": "Outgoing TX hash (set when status=done)" },
                     "toCurrency":    { "type": "string", "nullable": true },
