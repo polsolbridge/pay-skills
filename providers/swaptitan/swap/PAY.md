@@ -1,5 +1,5 @@
 ---
-name: swaptitan/swap
+name: swap
 title: SwapTitan Cross-Chain Swap API
 description: Non-custodial cross-chain crypto swap API supporting 1288 assets across Bitcoin, Ethereum, Solana, Monero and major networks with automatic best-rate routing
 use_case: Swap or quote cryptocurrency between any two assets without KYC, wallet connection or account creation; get real-time exchange rates and track swap completion status
