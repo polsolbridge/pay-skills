@@ -42,7 +42,34 @@ Premium API keys available at:
 1. Call `/v1/swap/quote` — confirm rate and minimum amount
 2. Call `/v1/swap/create` — provide user's destination address → receive `payinAddress`
 3. Return `payinAddress` to user so they can send source funds
-4. Poll `/v1/swap/status` every 20–30 seconds until `status === "done"`
+4. Poll `/v1/swap/status` every 20–30 seconds until `status === "done"` or `"failed"`
+
+```mermaid
+sequenceDiagram
+    participant Agent
+    participant SwapTitan as SwapTitan API
+    participant User
+
+    Agent->>SwapTitan: GET /v1/swap/quote?from=btc&to=sol&amount=0.01
+    SwapTitan-->>Agent: {estimatedAmount, minAmount, provider}
+
+    Agent->>Agent: Validate amount >= minAmount
+
+    Agent->>SwapTitan: POST /v1/swap/create {from, to, amount, address, refundAddress}
+    SwapTitan-->>Agent: {id, payinAddress, provider, validUntil}
+
+    Agent->>User: Return payinAddress (user sends funds here)
+
+    loop Poll every 20-30s
+        Agent->>SwapTitan: GET /v1/swap/status?id=...&provider=... (must forward provider)
+        SwapTitan-->>Agent: {status: waiting|confirming|exchanging|done|failed}
+        alt status == done
+            Agent->>User: Swap complete (payoutHash)
+        else status == failed
+            Agent->>User: Swap failed, refund pending to refundAddress
+        end
+    end
+```
 
 ## Supported Networks
 
