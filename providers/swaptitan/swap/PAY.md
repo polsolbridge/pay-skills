@@ -39,10 +39,10 @@ Premium API keys available at:
 
 ## Typical Agent Flow
 
-1. Call `/v1/swap/quote` — confirm rate and minimum amount
-2. Call `/v1/swap/create` — provide user's destination address → receive `payinAddress`
+1. Call `/v1/swap/quote` — confirm rate and validate `amount >= minAmount`
+2. Call `/v1/swap/create` — provide destination address → receive `payinAddress` **and `provider`**
 3. Return `payinAddress` to user so they can send source funds
-4. Poll `/v1/swap/status` every 20–30 seconds until `status === "done"` or `"failed"`
+4. Poll `/v1/swap/status?id=...&provider=...` — **always forward `provider` from create response** — exit loop on `status === "done"` or `status === "failed"`
 
 ```mermaid
 sequenceDiagram
