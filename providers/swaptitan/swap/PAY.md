@@ -40,8 +40,8 @@ Premium API keys available at:
 ## Typical Agent Flow
 
 1. Call `/v1/swap/quote` — confirm rate and validate `amount >= minAmount`
-2. Call `/v1/swap/create` — provide destination address → receive `payinAddress` **and `provider`**
-3. Return `payinAddress` to user so they can send source funds
+2. Call `/v1/swap/create` — provide destination address → receive `payinAddress`, `amount` (server-confirmed deposit figure), `provider`, and `validUntil` (deposit deadline)
+3. Return `payinAddress` + **exact `amount` from create response** to user — always use the server-confirmed amount, not the request value; warn user of `validUntil` deadline
 4. Poll `/v1/swap/status?id=...&provider=...` — **always forward `provider` from create response** — exit loop on `status === "done"` or `status === "failed"`
 
 ```mermaid
@@ -56,9 +56,9 @@ sequenceDiagram
     Agent->>Agent: Validate amount >= minAmount
 
     Agent->>SwapTitan: POST /v1/swap/create {from, to, amount, address, refundAddress}
-    SwapTitan-->>Agent: {id, payinAddress, provider, validUntil}
+    SwapTitan-->>Agent: {id, payinAddress, amount, provider, validUntil}
 
-    Agent->>User: Return payinAddress (user sends funds here)
+    Agent->>User: Return payinAddress + exact amount + validUntil deadline
 
     loop Poll every 20-30s
         Agent->>SwapTitan: GET /v1/swap/status?id=...&provider=... (must forward provider)
