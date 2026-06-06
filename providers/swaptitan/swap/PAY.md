@@ -42,7 +42,7 @@ Premium API keys available at:
 1. Call `/v1/swap/quote` — confirm rate and validate `amount >= minAmount`
 2. Call `/v1/swap/create` — provide destination address → receive `orderId`, `payinAddress`, `estimatedAmount`, and `provider`
 3. Return `payinAddress` to user so they can send source funds
-4. Poll `/v1/swap/status?id=<orderId>&provider=...` — **always forward `provider` from create response** — exit loop on `status === "done"` or `status === "failed"`
+4. Poll `/v1/swap/status?id=<orderId>&provider=...` — **always forward `provider` from create response** — exit loop on `status === "done"`, `"failed"`, or `"unknown"` (unknown = wrong provider forwarded)
 
 ```mermaid
 sequenceDiagram
@@ -62,11 +62,13 @@ sequenceDiagram
 
     loop Poll every 20-30s
         Agent->>SwapTitan: GET /v1/swap/status?id=orderId&provider=... (must forward provider)
-        SwapTitan-->>Agent: {status: waiting|confirming|exchanging|done|failed}
+        SwapTitan-->>Agent: {status: waiting|confirming|exchanging|done|failed|unknown}
         alt status == done
             Agent->>User: Swap complete (payoutHash)
         else status == failed
             Agent->>User: Swap failed, refund pending to refundAddress
+        else status == unknown
+            Agent->>User: Error - wrong provider forwarded, check orderId
         end
     end
 ```
