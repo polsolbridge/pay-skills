@@ -40,7 +40,7 @@ Premium API keys available at:
 ## Typical Agent Flow
 
 1. Call `/v1/swap/quote` — confirm rate and validate `amount >= minAmount`
-2. Call `/v1/swap/create` — provide destination address → receive `orderId`, `payinAddress`, `estimatedAmount`, and `provider`
+2. Call `/v1/swap/create` — forward `provider` from quote response, provide destination address → receive `orderId`, `payinAddress`, `estimatedAmount`, and `provider`
 3. Return `payinAddress` to user so they can send source funds
 4. Poll `/v1/swap/status?id=<orderId>&provider=...` — **always forward `provider` from create response** — exit loop on `status === "done"`, `"failed"`, or `"unknown"` (unknown = wrong provider forwarded)
 
@@ -55,7 +55,7 @@ sequenceDiagram
 
     Agent->>Agent: Validate amount >= minAmount
 
-    Agent->>SwapTitan: POST /v1/swap/create {from, to, amount, address, refundAddress}
+    Agent->>SwapTitan: POST /v1/swap/create {from, to, amount, address, refundAddress, provider} (forward from quote)
     SwapTitan-->>Agent: {orderId, payinAddress, estimatedAmount, provider, trackUrl}
 
     Agent->>User: Return payinAddress (user sends funds here)
