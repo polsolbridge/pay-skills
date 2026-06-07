@@ -19,6 +19,18 @@ Available at:
 
 API base URL: `https://api.swaptitan.net` (also: `https://api.terafabpay.de`)
 
+## Agent Discovery (Google A2A / MCP)
+
+SwapTitan is fully A2A-compatible:
+
+| Standard | Endpoint |
+|----------|----------|
+| **Google A2A Agent Card** | `https://swaptitan.net/.well-known/agent.json` |
+| **MCP Server** (JSON-RPC 2.0) | `https://swaptitan.net/mcp` |
+| **AID DNS** | `_agent.swaptitan.net` TXT record |
+
+The Agent Card lists all 6 skills, authentication options (none / x402 / apiKey), and MCP endpoint — a compliant A2A agent can discover and invoke SwapTitan with zero manual configuration.
+
 ## Endpoints
 
 | Method | Path | Description |
