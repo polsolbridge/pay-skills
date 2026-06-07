@@ -134,8 +134,8 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "estimatedAmount": { "type": "string", "example": "8.650462", "description": "Expected output amount in destination asset" },
-                    "minAmount":       { "type": "string", "example": "0.0005", "description": "Minimum input amount accepted" },
+                    "estimatedAmount": { "type": "number", "example": 8.650462, "description": "Expected output amount in destination asset" },
+                    "minAmount":       { "type": "number", "example": 0.0005, "description": "Minimum input amount accepted; compare numerically to input `amount`" },
                     "from":            { "type": "string", "example": "btc" },
                     "to":              { "type": "string", "example": "sol" },
                     "provider":        { "type": "string", "enum": ["changenow", "simpleswap"], "description": "Routing provider selected" }
@@ -193,7 +193,7 @@
                   "properties": {
                     "orderId":         { "type": "string", "description": "Order ID — pass as `id` to /v1/swap/status" },
                     "payinAddress":    { "type": "string", "description": "Send source funds to this address" },
-                    "estimatedAmount": { "type": "string", "description": "Estimated output amount in destination asset" },
+                    "estimatedAmount": { "type": "number", "description": "Estimated output amount in destination asset" },
                     "provider":        { "type": "string", "enum": ["changenow", "simpleswap"] },
                     "trackUrl":        { "type": "string", "description": "Provider tracking URL for manual status lookup" }
                   },
