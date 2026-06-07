@@ -2,7 +2,7 @@
 name: swap
 title: SwapTitan Cross-Chain Swap API
 description: Non-custodial cross-chain crypto swap API supporting 1288 assets across Bitcoin, Ethereum, Solana, Monero and major networks with automatic best-rate routing
-use_case: Swap or quote cryptocurrency between any two assets without KYC, wallet connection or account creation; get real-time exchange rates and track swap completion status
+use_case: Swap or quote cryptocurrency between any two assets without KYC, wallet connection or account creation; get real-time exchange rates, create wallets, check portfolios, verify token safety and track swap completion status
 category: finance
 service_url: https://swaptitan.net
 openapi:
@@ -21,7 +21,7 @@ API base URL: `https://api.swaptitan.net` (also: `https://api.terafabpay.de`)
 
 ## Agent Discovery (Google A2A / MCP)
 
-SwapTitan is fully A2A-compatible:
+SwapTitan is fully A2A-compatible and auto-discoverable:
 
 | Standard | Endpoint |
 |----------|----------|
@@ -29,7 +29,22 @@ SwapTitan is fully A2A-compatible:
 | **MCP Server** (JSON-RPC 2.0) | `https://swaptitan.net/mcp` |
 | **AID DNS** | `_agent.swaptitan.net` TXT record |
 
-The Agent Card lists all 6 skills, authentication options (none / x402 / apiKey), and MCP endpoint — a compliant A2A agent can discover and invoke SwapTitan with zero manual configuration.
+The Agent Card lists all 10 skills, authentication options (none / x402 / apiKey), and MCP endpoint — a compliant A2A agent can discover and invoke SwapTitan with zero manual configuration.
+
+## MCP Tools (10)
+
+| Tool | Description |
+|------|-------------|
+| `get_prices` | Real-time BTC, SOL, ETH, XMR prices |
+| `get_assets` | Full list of 1288+ supported assets |
+| `swap_quote` | Exchange rate + estimated output |
+| `swap_create` | Create swap order → deposit address |
+| `swap_status` | Poll swap status until done |
+| `create_wallet` | Generate SOL/ETH/Base/BSC wallet |
+| `check_portfolio` | Wallet balance + USD value on any chain |
+| `rug_check` | Token safety score + risk flags |
+| `set_price_alert` | Telegram alert when price hits target |
+| `ai_chat` | Natural language crypto assistant |
 
 ## Endpoints
 
@@ -83,6 +98,18 @@ sequenceDiagram
             Agent->>User: Error - wrong provider forwarded, check orderId
         end
     end
+```
+
+## Fully Autonomous Agent Flow (via MCP)
+
+An agent using the MCP server can execute a complete swap with zero user input:
+
+```
+1. create_wallet(chain=sol)           → {address, privateKey}
+2. swap_quote(from, to, amount)       → {estimatedAmount, provider}
+3. swap_create(…, address, provider)  → {payinAddress, orderId}
+4. → Prompt user: "Send X to payinAddress, receive Y at {address}"
+5. swap_status(orderId, provider)     → poll until done
 ```
 
 ## Supported Networks
