@@ -102,15 +102,19 @@ sequenceDiagram
 
 ## Fully Autonomous Agent Flow (via MCP)
 
-An agent using the MCP server can execute a complete swap with zero user input:
+An agent using the MCP server can execute a complete swap with minimal user input:
 
 ```
-1. create_wallet(chain=sol)           → {address, privateKey}
+1. Ask user for destination address (or use calling agent's own key material)
+   → address  (non-custodial: private key never leaves the user/agent)
 2. swap_quote(from, to, amount)       → {estimatedAmount, provider}
 3. swap_create(…, address, provider)  → {payinAddress, orderId}
 4. → Prompt user: "Send X to payinAddress, receive Y at {address}"
-5. swap_status(orderId, provider)     → poll until done
+5. swap_status(orderId, provider)     → poll every 20-30s;
+                                         exit on done, failed, or unknown
 ```
+
+> **Note:** Do not use `create_wallet` as the swap destination in production — the server generates and transmits the private key, which contradicts the non-custodial model. Use a wallet address provided by the user or generated locally by the calling agent.
 
 ## Supported Networks
 
