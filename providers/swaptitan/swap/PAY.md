@@ -107,7 +107,8 @@ An agent using the MCP server can execute a complete swap with minimal user inpu
 ```
 1. Ask user for destination address (or use calling agent's own key material)
    → address  (non-custodial: private key never leaves the user/agent)
-2. swap_quote(from, to, amount)       → {estimatedAmount, provider}
+2. swap_quote(from, to, amount)       → {estimatedAmount, minAmount, provider}
+   → Validate: amount >= minAmount (abort and inform user if not)
 3. swap_create(…, address, provider)  → {payinAddress, orderId}
 4. → Prompt user: "Send X to payinAddress, receive Y at {address}"
 5. swap_status(orderId, provider)     → poll every 20-30s;
